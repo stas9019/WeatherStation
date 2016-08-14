@@ -1,8 +1,12 @@
 <resources>
-    <string name="app_name">GeoQuiz</string>
-    <string name="action_settings">Settings</string>
-    <string name="quiz_question">Smth about Constantinopol</string>
 
+    <string name="pref_stationIP">Weather station address</string>
+    <string name="pref_connection_title">Connection</string>
+
+
+    <string name="app_name">Weather Station</string>
+    <string name="action_settings">Settings</string>
+    <string name="action_history">Settings</string>
 
     <string name="true_button">True</string>
     <string name="false_button">False</string>
@@ -10,6 +14,10 @@
 
     <string name="correctToast">Correct!</string>
     <string name="incorrectToast">Incorrect!</string>
+
+
+
+
 
     <string name="question_oceans">The Pacific Ocean is larger than
 the Atlantic Ocean.</string>
