@@ -5,5 +5,6 @@ package com.android.stas.weatherstation.View.Main;
  */
 public interface WeatherAdapter{
 
-    void presentResult(String temperature, String humidity);
+    void presentResult(String date, String temperature, String humidity);
+    void showError();
 }

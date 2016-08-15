@@ -28,6 +28,13 @@
         android:layout_weight="0.13"
         />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Last update:"
+        android:id="@+id/lastUpdateTextView"/>
+
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

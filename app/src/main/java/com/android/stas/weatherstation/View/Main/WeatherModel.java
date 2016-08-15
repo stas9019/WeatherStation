@@ -1,12 +1,12 @@
 package com.android.stas.weatherstation.View.Main;
 
-import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.support.v7.app.AppCompatActivity;
 
+import com.android.stas.weatherstation.Interactor.WeatherRecordContract;
 import com.android.stas.weatherstation.R;
+import com.android.stas.weatherstation.model.WeatherEntry;
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -14,6 +14,10 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * Created by root on 10.07.16.
@@ -27,13 +31,16 @@ public class WeatherModel {
     private static final String ERROR = "Error:";
 
     private WeatherAdapter activity;
+    private WeatherRecordContract contract;
 
     private RequestQueue queue;
 
     public WeatherModel(WeatherAdapter activity){
         this.activity = activity;
+        contract = new WeatherRecordContract((Context)activity);
         PreferenceManager.setDefaultValues((Context)activity, R.xml.preferences, false);
         queue = Volley.newRequestQueue((Context)activity);
+
     }
 
 
@@ -63,10 +70,14 @@ public class WeatherModel {
                             String temperature = data[0];
                             String humidity = data[1];
 
-                            activity.presentResult(temperature, humidity);
+                            //activity.presentResult(temperature, humidity);
+
+                            presentResult(temperature, humidity);
+                            saveData(temperature, humidity);
                         }
                         else{
-                            activity.presentResult(ERROR, ERROR);
+                            activity.showError();
+                            //activity.presentResult(ERROR, ERROR);
                         }
 
                     }
@@ -76,7 +87,8 @@ public class WeatherModel {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         System.out.println(error.toString());
-                        activity.presentResult(ERROR, ERROR);
+                        activity.showError();
+                        //activity.presentResult(ERROR, ERROR);
                     }
                 }
         );
@@ -86,6 +98,36 @@ public class WeatherModel {
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 
         return request;
+    }
+
+    public void getLastWeather(){
+        WeatherEntry entry = contract.fetchLast();
+        presentResult(entry.date, entry.temperature, entry.humidity);
+    }
+
+    private void presentResult(String temperature, String humidity){
+        String date = getFormattedDate();
+
+        presentResult(date, temperature, humidity);
+    }
+
+    private void presentResult(String date, String temperature, String humidity){
+        activity.presentResult(date, temperature, humidity);
+    }
+
+
+    private void saveData(String temperature, String humidity){
+
+        String date = getFormattedDate();
+
+        contract.insert(date, temperature, humidity);
+    }
+
+    private String getFormattedDate(){
+        DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm");
+        Date date = new Date();
+
+        return dateFormat.format(date);
     }
 
     private String getUrlFromPreferences(){

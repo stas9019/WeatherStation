@@ -23,7 +23,7 @@
                   android:label="@string/action_settings"
                   android:theme="@style/AppTheme.NoActionBar" />
 
-        <activity android:name=".View.History.ListViewLoader"
+        <activity android:name=".View.History.HistoryListView"
                   android:label="@string/action_history"
                   android:theme="@style/AppTheme.NoActionBar" />
 
