@@ -8,7 +8,13 @@
         <EditTextPreference
             android:key="pref_stationIP"
             android:title="@string/pref_stationIP"
-            android:defaultValue="198.162.0.101"/>
+            android:defaultValue="192.168.0.12"/>
+
+
+        <CheckBoxPreference
+            android:key="pref_service"
+            android:title="@string/pref_service"/>
+
 
     </PreferenceCategory>
 

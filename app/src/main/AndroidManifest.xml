@@ -3,6 +3,7 @@
     package="com.android.stas.weatherstation" >
 
     <application
+        android:name="com.orm.SugarApp"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -27,6 +28,13 @@
                   android:label="@string/action_history"
                   android:theme="@style/AppTheme.NoActionBar" />
 
+
+        <meta-data android:name="DATABASE" android:value="weather_entry.db" />
+        <meta-data android:name="VERSION" android:value="1" />
+        <meta-data android:name="QUERY_LOG" android:value="true" />
+        <meta-data android:name="DOMAIN_PACKAGE_NAME" android:value="com.android.stas.weatherstation" />
+
+        <receiver android:name=".Interactor.WeatherStationService"></receiver>
 
     </application>
     <uses-permission android:name="android.permission.INTERNET" />

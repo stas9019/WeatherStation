@@ -10,8 +10,7 @@ import android.widget.ProgressBar;
 /**
  * Created by root on 14.08.16.
  */
-public class HistoryListView extends ListActivity
-        {
+public class HistoryListView extends ListActivity{
 
     ProgressBar progressBar;
     HistoryListViewModel model;
@@ -21,6 +20,8 @@ public class HistoryListView extends ListActivity
         super.onCreate(savedInstanceState);
 
         model = new HistoryListViewModel(this);
+
+        setListAdapter(model.getAdapter());
 
         progressBar = new ProgressBar(this);
         progressBar.setLayoutParams(new AbsListView.LayoutParams(AbsListView.LayoutParams.WRAP_CONTENT,
