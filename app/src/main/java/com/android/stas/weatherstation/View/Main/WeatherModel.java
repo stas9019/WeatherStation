@@ -1,16 +1,17 @@
 package com.android.stas.weatherstation.View.Main;
 
 import android.content.Context;
-import android.preference.PreferenceManager;
 
 import com.android.stas.weatherstation.Interactor.StationManager;
-import com.android.stas.weatherstation.R;
 import com.android.stas.weatherstation.model.Requester;
 import com.android.stas.weatherstation.model.WeatherEntry;
+import com.android.stas.weatherstation.model.WeatherEvent;
+
+import org.greenrobot.eventbus.Subscribe;
 
 
 /**
- * Created by root on 10.07.16.
+ * @author Stas Zamana  on 10.07.16.
  */
 public class WeatherModel implements Requester{
 
@@ -23,7 +24,7 @@ public class WeatherModel implements Requester{
         this.context = (Context)activity;
         stationManager = new StationManager(this, (Context)activity);
 
-        PreferenceManager.setDefaultValues((Context) activity, R.xml.preferences, false);
+
 
     }
 
@@ -48,5 +49,10 @@ public class WeatherModel implements Requester{
         activity.showError();
     }
 
+
+    @Subscribe
+    public void onWeatherEvent(WeatherEvent event){
+        activity.presentResult(event.date, event.temperature, event.humidity);
+    }
 
 }

@@ -20,7 +20,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
- * Created by root on 15.08.16.
+ * @author Stas Zamana  on 15.08.16.
  */
 public class StationManager {
 
@@ -38,7 +38,6 @@ public class StationManager {
 
         queue = Volley.newRequestQueue(context);
         PreferenceManager.setDefaultValues(context, R.xml.preferences, false);
-
     }
 
     public void update(){
