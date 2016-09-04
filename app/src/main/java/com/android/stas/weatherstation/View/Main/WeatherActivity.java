@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -57,6 +58,7 @@ public class WeatherActivity extends AppCompatActivity implements WeatherAdapter
             mHumidityTextView.setText(savedInstanceState.getString(HUMIDITY, "–"));
         }
 
+        hideStatusBar();
 
 
         model = new WeatherModel(this);
@@ -75,7 +77,12 @@ public class WeatherActivity extends AppCompatActivity implements WeatherAdapter
                 openHistory();
             }
         });
+    }
 
+    private void hideStatusBar(){
+
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
     }
 
     @Override

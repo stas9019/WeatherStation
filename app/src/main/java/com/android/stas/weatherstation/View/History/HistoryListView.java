@@ -2,9 +2,9 @@ package com.android.stas.weatherstation.View.History;
 
 import android.app.ListActivity;
 import android.os.Bundle;
-import android.view.Gravity;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
+import android.view.WindowManager;
+import android.widget.ListAdapter;
 import android.widget.ProgressBar;
 
 /**
@@ -18,22 +18,22 @@ public class HistoryListView extends ListActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        hideStatusBar();
 
         model = new HistoryListViewModel(this);
-
-        setListAdapter(model.getAdapter());
-
-        progressBar = new ProgressBar(this);
-        progressBar.setLayoutParams(new AbsListView.LayoutParams(AbsListView.LayoutParams.WRAP_CONTENT,
-                AbsListView.LayoutParams.WRAP_CONTENT, Gravity.CENTER));
-        progressBar.setIndeterminate(true);
-        getListView().setEmptyView(progressBar);
+        ListAdapter adapter = model.getAdapter();
+        setListAdapter(adapter);
 
         // Must add the progress bar to the root of the layout
         ViewGroup root = (ViewGroup) findViewById(android.R.id.content);
         root.addView(progressBar);
 
 
+    }
+    private void hideStatusBar(){
+
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
     }
 
 
