@@ -15,7 +15,7 @@ import com.android.stas.weatherstation.R;
 import java.util.Calendar;
 
 /**
- * Created by root on 02.07.16.
+ * @author Stas Zamana on 02.07.16.
  */
 public class SettingsFragment extends PreferenceFragment implements
         SharedPreferences.OnSharedPreferenceChangeListener{
@@ -72,8 +72,8 @@ public class SettingsFragment extends PreferenceFragment implements
 
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(System.currentTimeMillis());
-        calendar.add(Calendar.SECOND, 5); // first time
-        long frequency= 5 * 1000; // in ms
+        calendar.add(Calendar.SECOND, 10); // first time
+        long frequency= 1 * 60 * 1000; // in ms
         //AlarmManager.
         alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), frequency, pendingIntent);
 

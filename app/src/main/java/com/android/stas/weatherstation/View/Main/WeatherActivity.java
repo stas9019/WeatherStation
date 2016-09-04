@@ -1,25 +1,21 @@
 package com.android.stas.weatherstation.View.Main;
 
-import android.app.AlarmManager;
-import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.stas.weatherstation.Interactor.WeatherStationService;
 import com.android.stas.weatherstation.R;
 import com.android.stas.weatherstation.View.History.HistoryListView;
 import com.android.stas.weatherstation.View.Settings.SettingsActivity;
 
-import java.util.Calendar;
+import org.greenrobot.eventbus.EventBus;
 
 
 public class WeatherActivity extends AppCompatActivity implements WeatherAdapter {
@@ -76,25 +72,25 @@ public class WeatherActivity extends AppCompatActivity implements WeatherAdapter
             }
         });
 
-        //scheduleService();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        Log.d(TAG, "Model will register for events");
+        EventBus.getDefault().register(model);
+    }
+    @Override
+    public void onStop() {
+        Log.d(TAG, "Model will unregister from events");
+        EventBus.getDefault().unregister(model);
+        super.onStop();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         model.getLastWeather();
-    }
-
-    private void scheduleService(){
-        Intent myIntent = new Intent(this, WeatherStationService.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, myIntent, 0);
-
-        AlarmManager alarmManager = (AlarmManager)this.getSystemService(Context.ALARM_SERVICE);
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(System.currentTimeMillis());
-        calendar.add(Calendar.SECOND, 5); // first time
-        long frequency= 5 * 1000; // in ms
-        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), frequency, pendingIntent);
     }
 
     private void openHistory(){
@@ -162,11 +158,7 @@ public class WeatherActivity extends AppCompatActivity implements WeatherAdapter
     }
 
     /*
-    @Override
-    public void onStart() {
-        super.onStart();
-        Log.d(TAG, "onStart() called");
-    }
+
     @Override
     public void onPause() {
         super.onPause();
@@ -177,11 +169,7 @@ public class WeatherActivity extends AppCompatActivity implements WeatherAdapter
         super.onResume();
         Log.d(TAG, "onResume() called");
     }
-    @Override
-    public void onStop() {
-        super.onStop();
-        Log.d(TAG, "onStop() called");
-    }
+
     @Override
     public void onDestroy() {
         super.onDestroy();
