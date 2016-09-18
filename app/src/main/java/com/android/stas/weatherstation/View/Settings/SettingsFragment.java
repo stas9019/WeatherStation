@@ -1,18 +1,15 @@
 package com.android.stas.weatherstation.View.Settings;
 
-import android.app.AlarmManager;
-import android.app.PendingIntent;
-import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
+import android.preference.EditTextPreference;
 import android.preference.PreferenceFragment;
+import android.preference.PreferenceManager;
 
-import com.android.stas.weatherstation.Interactor.WeatherStationService;
+import com.android.stas.weatherstation.Interactor.ServiceManager;
+import com.android.stas.weatherstation.Model.Constants;
 import com.android.stas.weatherstation.R;
-
-import java.util.Calendar;
 
 /**
  * @author Stas Zamana on 02.07.16.
@@ -20,13 +17,18 @@ import java.util.Calendar;
 public class SettingsFragment extends PreferenceFragment implements
         SharedPreferences.OnSharedPreferenceChangeListener{
 
+    private ServiceManager manager;
+
     @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.preferences);
+
+        manager = new ServiceManager(getActivity());
+
+        updateSummaryForIP();
+        updateSummaryForFrequency();
     }
-
-
 
     @Override
     public void onResume() {
@@ -44,46 +46,51 @@ public class SettingsFragment extends PreferenceFragment implements
                 .unregisterOnSharedPreferenceChangeListener(this);
     }
 
-    public static final String KEY_PREF_SERVICE = "pref_service";
-
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,String key)
     {
-        if (key.equals(KEY_PREF_SERVICE)) {
+        if (key.equals(Constants.KEY_PREF_SERVICE) ) {
             CheckBoxPreference servicePref = (CheckBoxPreference)findPreference(key);
 
             if(servicePref.isChecked()){
-                launchService();
+                manager.launchService();
             }
             else{
-                stopService();
+                manager.stopService();
             }
-            // Set summary to be the user-description for the selected value
-            //servicePref.setSummary(sharedPreferences.getString(key, ""));
+
+        }
+        else if(key.equals(Constants.KEY_PREF_FREQUENCY)){
+            CheckBoxPreference servicePref = (CheckBoxPreference)findPreference(Constants.KEY_PREF_SERVICE);
+
+            if(servicePref.isChecked()){
+                manager.stopService();
+                manager.launchService();
+            }
+            updateSummaryForFrequency();
+        }
+        else if (key.equals(Constants.KEY_PREF_IP) ) {
+            updateSummaryForIP();
         }
     }
 
+    private void updateSummaryForIP(){
 
-    private void launchService(){
-        Intent myIntent = new Intent(getActivity(), WeatherStationService.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(getActivity(), 0, myIntent, 0);
+        EditTextPreference ipPref = (EditTextPreference)findPreference(Constants.KEY_PREF_IP);
 
-        AlarmManager alarmManager = (AlarmManager)getActivity()
-                .getSystemService(Context.ALARM_SERVICE);
-
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(System.currentTimeMillis());
-        calendar.add(Calendar.SECOND, 10); // first time
-        long frequency= 1 * 60 * 1000; // in ms
-        //AlarmManager.
-        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), frequency, pendingIntent);
-
+        String ipText = getSharedPreference().getString(Constants.KEY_PREF_IP, "0");
+        ipPref.setSummary(ipText);
     }
 
-    private void stopService() {
-        Intent myIntent = new Intent(getActivity(), WeatherStationService.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(getActivity(), 0, myIntent, 0);
-        AlarmManager alarmManager = (AlarmManager)getActivity()
-                .getSystemService(Context.ALARM_SERVICE);
-        alarmManager.cancel(pendingIntent);
+    private void updateSummaryForFrequency(){
+
+        EditTextPreference freqPref = (EditTextPreference)findPreference(Constants.KEY_PREF_FREQUENCY);
+
+        String frequencyText = getSharedPreference().getString(Constants.KEY_PREF_FREQUENCY, "5");
+        int frequency = Integer.parseInt(frequencyText);
+        freqPref.setSummary(frequency + " minutes");
+    }
+
+    private SharedPreferences getSharedPreference(){
+        return PreferenceManager.getDefaultSharedPreferences(getActivity());
     }
 }

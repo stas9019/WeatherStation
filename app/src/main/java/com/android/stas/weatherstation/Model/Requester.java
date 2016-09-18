@@ -1,4 +1,4 @@
-package com.android.stas.weatherstation.model;
+package com.android.stas.weatherstation.Model;
 
 /**
  * Created by root on 15.08.16.

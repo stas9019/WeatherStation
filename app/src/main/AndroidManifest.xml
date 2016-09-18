@@ -34,8 +34,16 @@
         <meta-data android:name="QUERY_LOG" android:value="true" />
         <meta-data android:name="DOMAIN_PACKAGE_NAME" android:value="com.android.stas.weatherstation" />
 
-        <receiver android:name=".Interactor.WeatherStationService"></receiver>
+        <receiver android:name=".Interactor.WeatherUpdateService"></receiver>
+
+        <receiver android:name=".Interactor.ServiceManager"
+        android:enabled="false">
+        <intent-filter>
+            <action android:name="android.intent.action.BOOT_COMPLETED"></action>
+        </intent-filter>
+    </receiver>
 
     </application>
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
 </manifest>

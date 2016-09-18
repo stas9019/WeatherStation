@@ -5,8 +5,8 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
 import com.android.stas.weatherstation.R;
-import com.android.stas.weatherstation.model.Requester;
-import com.android.stas.weatherstation.model.WeatherEntry;
+import com.android.stas.weatherstation.Model.Requester;
+import com.android.stas.weatherstation.Model.WeatherEntry;
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -44,9 +44,7 @@ public class StationManager {
 
         StringRequest request = createRequest();
         queue.add(request);
-
     }
-
 
     private StringRequest createRequest(){
 
@@ -57,14 +55,15 @@ public class StationManager {
 
                     @Override
                     public void onResponse(String response) {
-
                         System.out.println(response);
-
 
                         if (response.startsWith(TEMPERATURE)){
                             String[] data = response.split(",");
-                            String temperature = data[0];
-                            String humidity = data[1];
+                            String temperatureRaw = data[0].split(": ")[1];
+                            String humidityRaw = data[1].split(": ")[1];
+
+                            String temperature = temperatureRaw.substring(0, temperatureRaw.length() - 2);
+                            String humidity = humidityRaw.substring(0, humidityRaw.length()-2);
 
                             String date = getFormattedDate();
                             requester.presentResult(date, temperature, humidity);
@@ -72,7 +71,6 @@ public class StationManager {
                         }
                         else{
                             requester.showError();
-                            //activity.presentResult(ERROR, ERROR);
                         }
 
                     }

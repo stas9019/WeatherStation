@@ -3,9 +3,9 @@ package com.android.stas.weatherstation.View.Main;
 import android.content.Context;
 
 import com.android.stas.weatherstation.Interactor.StationManager;
-import com.android.stas.weatherstation.model.Requester;
-import com.android.stas.weatherstation.model.WeatherEntry;
-import com.android.stas.weatherstation.model.WeatherEvent;
+import com.android.stas.weatherstation.Model.Requester;
+import com.android.stas.weatherstation.Model.WeatherEntry;
+import com.android.stas.weatherstation.Model.WeatherEvent;
 
 import org.greenrobot.eventbus.Subscribe;
 
@@ -16,16 +16,11 @@ import org.greenrobot.eventbus.Subscribe;
 public class WeatherModel implements Requester{
 
     private WeatherAdapter activity;
-    private Context context;
     private StationManager stationManager;
 
     public WeatherModel(WeatherAdapter activity){
         this.activity = activity;
-        this.context = (Context)activity;
         stationManager = new StationManager(this, (Context)activity);
-
-
-
     }
 
     public void update(){
@@ -37,9 +32,7 @@ public class WeatherModel implements Requester{
         WeatherEntry entry = WeatherEntry.last(WeatherEntry.class);
         if (entry != null)
             presentResult(entry.date, entry.temperature, entry.humidity);
-
     }
-
 
     public void presentResult(String date, String temperature, String humidity){
         activity.presentResult(date, temperature, humidity);
