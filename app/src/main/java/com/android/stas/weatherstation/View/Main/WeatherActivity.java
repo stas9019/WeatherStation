@@ -7,7 +7,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
+import android.view.WindowManager;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,12 +23,16 @@ public class WeatherActivity extends AppCompatActivity implements WeatherAdapter
 
     private static final String TAG = "WeatherActivity";
 
-    private static final String TEMPERATURE = "Temperature:";
-    private static final String HUMIDITY = "Humidity:";
-    private static final String LAST_UPDATE = "Last update: ";
+    private static final String TEMPERATURE = "Temperature";
+    private static final String HUMIDITY = "Humidity";
+    private static final String LAST_UPDATE = "Last update";
 
-    private Button mUpdateButton;
-    private Button mHistoryButton;
+    private static final String TEMPERATURE_SYMBOL = " °C";
+    private static final String HUMIDITY_SYMBOL = " %";
+
+
+    private ImageButton mUpdateButton;
+    private ImageButton mHistoryButton;
     private TextView mTemperatureTextView;
     private TextView mLastUpdateTextView;
     private TextView mHumidityTextView;
@@ -43,16 +48,17 @@ public class WeatherActivity extends AppCompatActivity implements WeatherAdapter
         mHumidityTextView = (TextView) findViewById(R.id.humidityTextView);
         mLastUpdateTextView = (TextView) findViewById(R.id.lastUpdateTextView);
 
-        mUpdateButton = (Button) findViewById(R.id.updateButton);
-        mHistoryButton = (Button) findViewById(R.id.historyButton);
+        mUpdateButton = (ImageButton) findViewById(R.id.updateButton);
+        mHistoryButton = (ImageButton) findViewById(R.id.historyButton);
 
         if(savedInstanceState != null){
 
-            mLastUpdateTextView.setText(savedInstanceState.getString(LAST_UPDATE, LAST_UPDATE + " –"));
-            mTemperatureTextView.setText(savedInstanceState.getString(TEMPERATURE, TEMPERATURE + " –"));
-            mHumidityTextView.setText(savedInstanceState.getString(HUMIDITY, HUMIDITY + " –"));
+            mLastUpdateTextView.setText(savedInstanceState.getString(LAST_UPDATE, "–"));
+            mTemperatureTextView.setText(savedInstanceState.getString(TEMPERATURE, "–"));
+            mHumidityTextView.setText(savedInstanceState.getString(HUMIDITY, "–"));
         }
 
+        hideStatusBar();
 
 
         model = new WeatherModel(this);
@@ -71,7 +77,12 @@ public class WeatherActivity extends AppCompatActivity implements WeatherAdapter
                 openHistory();
             }
         });
+    }
 
+    private void hideStatusBar(){
+
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
     }
 
     @Override
@@ -102,14 +113,15 @@ public class WeatherActivity extends AppCompatActivity implements WeatherAdapter
 
     public void presentResult(String date, String temperature, String humidity){
 
-        if (!temperature.startsWith(TEMPERATURE)){
-            temperature = TEMPERATURE + temperature;
-            humidity = HUMIDITY + humidity;
-        }
+//        if (!temperature.startsWith(TEMPERATURE)){
+//            temperature = TEMPERATURE + temperature;
+//            humidity = HUMIDITY + humidity;
+//        }
 
-        mLastUpdateTextView.setText(LAST_UPDATE + date);
-        mTemperatureTextView.setText(temperature);
-        mHumidityTextView.setText(humidity);
+
+        mTemperatureTextView.setText(temperature + TEMPERATURE_SYMBOL);
+        mHumidityTextView.setText(humidity + HUMIDITY_SYMBOL);
+        mLastUpdateTextView.setText(date);
     }
 
 
@@ -124,7 +136,6 @@ public class WeatherActivity extends AppCompatActivity implements WeatherAdapter
         super.onSaveInstanceState(savedInstanceState);
 
         Log.d(TAG, "onSaveInstanceState called");
-        //savedInstanceState.putInt(KEY_INDEX, mCurrentIndex);
         savedInstanceState.putString(LAST_UPDATE, mLastUpdateTextView.toString());
         savedInstanceState.putString(TEMPERATURE, mTemperatureTextView.toString());
         savedInstanceState.putString(HUMIDITY, mHumidityTextView.toString());
@@ -157,23 +168,4 @@ public class WeatherActivity extends AppCompatActivity implements WeatherAdapter
         return super.onOptionsItemSelected(item);
     }
 
-    /*
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        Log.d(TAG, "onPause() called");
-    }
-    @Override
-    public void onResume() {
-        super.onResume();
-        Log.d(TAG, "onResume() called");
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        Log.d(TAG, "onDestroy() called");
-    }
-    */
 }

@@ -63,8 +63,11 @@ public class StationManager {
 
                         if (response.startsWith(TEMPERATURE)){
                             String[] data = response.split(",");
-                            String temperature = data[0];
-                            String humidity = data[1];
+                            String temperatureRaw = data[0];
+                            String humidityRaw = data[1];
+
+                            String temperature = temperatureRaw.split(": ")[1];
+                            String humidity = humidityRaw.split(": ")[1];
 
                             String date = getFormattedDate();
                             requester.presentResult(date, temperature, humidity);
